@@ -1,6 +1,12 @@
 <?php
 session_start();
 date_default_timezone_set("Asia/Taipei");
+$levelStr=[
+    1=>'普遍級',
+    2=>'輔導級',
+    3=>'保護級',
+    4=>'限制級',
+];
 
 class DB{
     protected $dsn="mysql:host=localhost;charset=utf8;dbname=db25";
@@ -31,7 +37,7 @@ class DB{
     }
 
     function count(...$arg){
-        $sql="SELECT count(*) FROM $this->table ";
+        $sql="SELECT count(*) FROM $this->table";
         if(isset($arg[0])){
             if(is_array($arg[0])){
                 $tmp=$this->a2s($arg[0]);
@@ -44,7 +50,7 @@ class DB{
         if(isset($arg[1])){
             $sql .= $arg[1];
         }
-
+        //echo $sql;
         return $this->pdo->query($sql)->fetchColumn();
     }
 
@@ -87,7 +93,7 @@ class DB{
         }else{
             $sql .= " WHERE `id`='$arg'";
         }
-        
+        //echo $sql;
         return $this->pdo->exec($sql);
 
     }
