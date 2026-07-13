@@ -29,7 +29,7 @@
           .controls{
             width:420px;
             height:120px;
-            background:green;
+           /*  background:green; */
             margin:5px auto;
             display:flex;
             justify-content: space-evenly;
@@ -49,9 +49,25 @@
             border-right:0px solid white;
           }
           .btns{
+            display:flex;
             width:280px;
             height:120px;
-            background:yellow;
+            /* background:yellow; */
+            font-size:12px;
+            overflow: hidden;
+            position:relative;
+          }
+          .btn{
+            width:70px;
+            height:120px;
+            box-sizing: border-box;
+            padding:5px;
+            flex-shrink: 0;
+            position:relative;
+          }
+          .btn img{
+            width:100%;
+
           }
         </style>
       <div class="rb tab" style="width:95%;">
@@ -71,7 +87,16 @@
           <!--按鈕區-->
           <div class="controls">
             <div class='left-btn'></div>
-            <div class='btns'></div>
+            <div class='btns'>
+              <?php 
+              foreach($posters as $idx => $poster):
+              ?>
+              <div class="btn">
+                <img src="upload/<?= $poster['img'] ?>" data-ani="<?= $poster['ani'] ?>">
+                <div><?= $poster['name'] ?></div>
+              </div>
+              <?php endforeach;   ?>
+            </div>
             <div class='right-btn'></div>
           </div>
         </div>
@@ -79,6 +104,87 @@
     </div>
     <script>
       $(".poster").eq(0).show();
+
+      let autoSlide=setInterval("slider()", 3000);
+
+      function slider(index=undefined){
+        let now=$(".poster:visible")
+        let next
+        if(index==undefined){
+          if($(now).index()+1<$(".poster").length){
+            next=$(".poster").eq($(now).index()+1)
+          }else{
+            next=$(".poster").eq(0)
+          }
+        }else{
+          next=$(".poster").eq(index)
+        }
+
+        let ani=$(now).data('ani');
+        //console.log(ani)
+        switch(ani){
+          case 1:
+            //淡入淡出
+            $(now).fadeOut(1000,()=>{
+                $(next).fadeIn(1000)
+            })
+          break;
+          case 2:
+            //滑入滑出
+            $(now).slideUp(1000,()=>{
+              $(next).slideDown(1000)
+            })
+          break;
+          case 3:
+            //縮放
+            $(now).hide(1000,()=>{
+              $(next).show(2000)
+            })
+
+          break;
+        }
+        
+      }
+
+
+      $(".btn").on("click",function(){
+        let index=$(this).index();
+        //console.log(index)
+        slider(index);
+      })
+      
+      let p=0;
+      let total=$(".poster").length
+      $(".left-btn,.right-btn").on("click",function(){
+            let direction=$(this).attr('class').split("-")[0]
+            //console.log(direction)
+
+            switch(direction){
+              case "left":
+                if(p-1 >= 0){
+                  p--
+                }
+
+              break;
+              case 'right':
+                if(p+1<=total-4){
+                  p++
+                }
+              break;
+            }
+            $(".btn").animate({right:70*p})
+      })
+
+      //當進入按鈕區時,停止輪播，離開後繼續輪播
+      $(".btns").hover(
+        function(){
+          clearInterval(autoSlide);
+        },
+        function(){
+          autoSlide=setInterval("slider()", 3000);
+        }
+      )
+
     </script>
 
 
