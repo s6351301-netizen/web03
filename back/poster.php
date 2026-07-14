@@ -21,12 +21,9 @@
             
         </div>
         <div style="width:25%">
-            <?php 
-                $prev=($idx==0)?$poster['id']:$posters[$idx-1]['id'];
-                $next=($idx==count($posters)-1)?$poster['id']:$posters[$idx+1]['id'];
-            ?>
-            <input class="switch-rank" type="button" value="往上" data-ids="<?= $poster['id']."-".$prev ?>">
-            <input class="switch-rank" type="button" value="往下" data-ids="<?= $poster['id']."-".$next ?>">
+            <!-- <input type="button" value="往上">
+            <input type="button" value="往下"> -->
+            <input type="number" name="rank[]" value="<?= $poster['rank']; ?>" style="width:50px;">
         </div>
         <div style="width:25%">
             <input type="checkbox" name="sh[]" value="<?= $poster['id']; ?>" <?= ($poster['sh']==1)?'checked':""; ?>>顯示
@@ -47,14 +44,6 @@
 </div>
 </form>
 </div>
-<script>
-$(".switch-rank").on("click",function(){
-    let ids=$(this).data('ids').split('-')
-    $.post("./api/sw.php",{ids,"table":"Poster"},()=>{
-        location.reload()
-    })
-})
-</script>
 <hr>
 <div style="height:150px">
     <div class="ct">新增預告片海報</div>
